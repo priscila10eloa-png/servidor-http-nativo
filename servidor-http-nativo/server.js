@@ -7,12 +7,11 @@ const server = http.createServer();
 server.on('request', (req, res) => {
     console.log(`Requisição recebida! ${req.method} ${req.url}`);
 
-    res.statusCode = 201
+    res.statusCode = 200
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.end("recurso criado");    
 });
 
 server.listen(porta, ()=> {
     console.log(`Servidor ouvindo na porta ${porta}`)
-});
-
+});console.log(new Date().toISOString())
