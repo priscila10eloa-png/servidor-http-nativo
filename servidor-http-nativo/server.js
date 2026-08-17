@@ -1,17 +1,48 @@
-const http = require('node:http')
+import http from 'node:http'
+import { URL } from 'node:url'
 
-const porta = 3000
+const port = 3000
 
-const server = http.createServer();
+const status = {
+    "status": "ok",
+    "date": new Date().toISOString()
+}
 
-server.on('request', (req, res) => {
-    console.log(`Requisição recebida! ${req.method} ${req.url}`);
+const produtos = [
+    { id: 1, nome: "Sabonete" },
+    { id: 2, nome: "Monitor" },
+    { id: 3, nome: "Cadeira Gamer" }
+]
 
-    res.statusCode = 200
+
+const server = http.createServer((req, res) => {
+    const urlObj = new URL(req.url, `http://${req.headers.host}`)
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.end (JSON.stringify({ status: "ok" }));    
+
+    if (req.method == "GET" && urlObj.pathname == "/contato") {
+        return res.end(JSON.stringify({
+            "numero_telefone": "67 99999-9999",
+            "endereco": "Rua da Alegria, 99"
+        }));
+    }
+
+    if (req.method == "GET" && urlObj.pathname == "/produtos") {
+        return res.end(JSON.stringify(produtos));
+    }
+    
+    else {
+        res.statusCode = 404
+        res.end('Rota não encontrada')
+    }
+    res.end(JSON.stringify({ "data": "Página Inicial" }));
 });
 
-server.listen(porta, ()=> {
-    console.log(`Servidor ouvindo na porta ${porta}`)
-});console.log(new Date().toISOString())
+server.listen(port, () => {
+    console.log("Servidor funcionando na porta ", port)
+});
+
+
+
+
+
